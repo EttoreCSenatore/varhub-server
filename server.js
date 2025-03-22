@@ -9,7 +9,9 @@ require('dotenv').config();
 
 const app = express();  
 
-app.use(cors());  
+// temporary cors configuration - allow all origins
+app.use(cors());
+
 app.use(express.json());  
 
 // Routes  
