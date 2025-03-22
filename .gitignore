@@ -1,0 +1,45 @@
+# Build output and dependencies
+node_modules/
+dist/
+build/
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables and security files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+serviceAccountKey.json
+*.pem
+*.key
+*.cert
+
+# Editor settings
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files and cache
+.cache/
+tmp/
+temp/
+
+# Test and coverage
+coverage/
+.nyc_output/
