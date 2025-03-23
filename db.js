@@ -16,23 +16,21 @@ const pool = new Pool({
   connectionTimeoutMillis: 5000, // Connection timeout
 });  
 
-// Connection test function
-const testConnection = async () => {
+// Database connection function (previously testConnection)
+// Modified to return a promise and not catch errors internally
+const connect = async () => {
+  const client = await pool.connect();
   try {
-    const client = await pool.connect();
-    try {
-      await client.query('SELECT NOW()');
-      console.log('Database connection successful');
-    } finally {
-      client.release();
-    }
-  } catch (err) {
-    console.error('Database connection failed:', err);
-    // Allow server to continue running even if DB connection fails  
+    await client.query('SELECT NOW()');
+    return true; // Return success value
+  } finally {
+    client.release();
   }
 };
 
-// Test connection on server start
-testConnection();
-
-module.exports = pool;
+// Export both pool and connect function
+module.exports = {
+  pool,
+  connect,
+  query: (text, params) => pool.query(text, params)
+};
