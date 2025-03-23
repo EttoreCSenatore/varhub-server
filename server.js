@@ -5,7 +5,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');  
 const notificationRoutes = require('./routes/notificationRoutes');  
-const { connect } = require('./db');
+const db = require('./db'); // Import the entire db module
 require('dotenv').config();
 
 const app = express();  
@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 app.get('/health', async (req, res) => {
   try {
     // Check database connection status
-    const dbStatus = await connect().then(() => 'connected').catch(() => 'disconnected');
+    const dbStatus = await db.connect().then(() => 'connected').catch(() => 'disconnected');
     
     res.status(200).json({
       status: 'healthy',
@@ -97,16 +97,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Database connection and server startup
+// Start server first, then try to connect to database
 const PORT = process.env.PORT || 5000;  
-connect()
-  .then(() => {
-    console.log('Database connected successfully');
-    app.listen(PORT, '0.0.0.0', () => {  
-      console.log(`Server running on port ${PORT}`);  
+app.listen(PORT, '0.0.0.0', () => {  
+  console.log(`Server running on port ${PORT}`);
+  
+  // Try to connect to database after server has started
+  db.connect()
+    .then(() => {
+      console.log('Database connected successfully');
+    })
+    .catch(err => {
+      console.error('Failed to connect to database:', err.message);
+      console.log('Server will continue running without database connection');
+      // Don't exit process, allow server to run even without DB
     });
-  })
-  .catch(err => {
-    console.error('Failed to connect to database:', err.message);
-    process.exit(1);
-  }); 
+}); 
