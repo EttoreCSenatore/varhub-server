@@ -13,18 +13,52 @@ const app = express();
 // Improved CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:5173', 'https://varhub-client.vercel.app'];
+  : [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      'https://varhub-client.vercel.app',
+      'https://varhub-client-git-main.vercel.app',
+      'https://varhub-client-*.vercel.app' // Allow all Vercel preview deployments
+    ];
+
+console.log('Allowed origins:', allowedOrigins);
 
 app.use(cors({
   origin: function(origin, callback) {
     // Origin might be undefined in development environment (e.g., Postman)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Check if the origin matches any of our allowed origins
+    // For wildcard domains, we need to check if it follows the pattern
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin === origin) {
+        return true;
+      }
+      
+      // Handle wildcard domains
+      if (allowedOrigin.includes('*')) {
+        const pattern = new RegExp(
+          `^${allowedOrigin.replace(/\*/g, '.*')}$`
+        );
+        return pattern.test(origin);
+      }
+      
+      return false;
+    });
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
+      console.warn(`CORS blocked request from: ${origin}`);
       callback(new Error('CORS policy violation'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use(express.json());  
