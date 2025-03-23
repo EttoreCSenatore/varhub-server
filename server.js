@@ -12,41 +12,15 @@ const app = express();
 
 // Simplified CORS configuration 
 app.use(cors({
-  origin: ['https://varhub-client.vercel.app', 'http://localhost:3000', 'http://localhost:5173'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Date', 'X-Api-Version'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Log CORS configuration
-console.log('CORS enabled for specific origins with credentials support');
+console.log('CORS enabled with origin: *');
 
-// Handle OPTIONS requests explicitly
-app.options('*', (req, res) => {
-  // These headers are crucial for CORS with credentials
-  res.header('Access-Control-Allow-Origin', 'https://varhub-client.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRF-Token, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Max-Age', '86400');
-  res.sendStatus(204);
-});
-
-// Set custom CORS headers as a fallback
-app.use((req, res, next) => {
-  // For non-OPTIONS requests
-  if (req.method !== 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', 'https://varhub-client.vercel.app');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRF-Token, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version');
-    res.header('Access-Control-Allow-Credentials', 'true');
-  }
-  next();
-});
-
-app.use(express.json());  
+app.use(express.json());
 
 // Root path handler
 app.get('/', (req, res) => {
