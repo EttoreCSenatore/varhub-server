@@ -1,11 +1,12 @@
 // backend/controllers/projectController.js
 const pool = require('../db');
 
-// Get all projects with AR content
+// Get all projects with AR content and VR videos
 const getProjects = async (req, res) => {
   try {
     const projects = await pool.query(
-      `SELECT p.*, a.marker_image_url, a.model_3d_url 
+      `SELECT p.id, p.name, p.description, p.thumbnail_url, p.vr_video_url, 
+              a.marker_image_url, a.model_3d_url 
        FROM projects p 
        LEFT JOIN ar_content a ON p.id = a.project_id`
     );
@@ -28,7 +29,8 @@ const getProjectById = async (req, res) => {
     );
 
     const project = await pool.query(
-      `SELECT p.*, a.marker_image_url, a.model_3d_url 
+      `SELECT p.id, p.name, p.description, p.thumbnail_url, p.vr_video_url, 
+              a.marker_image_url, a.model_3d_url 
        FROM projects p 
        LEFT JOIN ar_content a ON p.id = a.project_id 
        WHERE p.id = $1`,
