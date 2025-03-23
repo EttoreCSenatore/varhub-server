@@ -10,17 +10,24 @@ require('dotenv').config();
 
 const app = express();  
 
-// Simplified CORS configuration 
+// Improved CORS configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:5173', 'https://varhub-client.vercel.app'];
+
 app.use(cors({
-  origin: '*', // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  origin: function(origin, callback) {
+    // Origin might be undefined in development environment (e.g., Postman)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy violation'));
+    }
+  },
+  credentials: true
 }));
 
-// Log CORS configuration
-console.log('CORS enabled with origin: *');
-
-app.use(express.json());
+app.use(express.json());  
 
 // Root path handler
 app.get('/', (req, res) => {
