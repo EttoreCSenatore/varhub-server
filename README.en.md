@@ -19,4 +19,4 @@ Protected routes require `Authorization: Bearer <token>`. Full list in [API](htt
 
 ## License
 
-[MIT](LICENSE.txt): free software; use, modify and distribute it, including commercially. The names and logos of VARLab and Conestoga College are not licensed.
+[GNU AGPL-3.0-or-later](LICENSE) (free software): use, modify and distribute it, including commercially; if you host a modified version, offer its source code to the users. The names and logos of VARLab and Conestoga College are not licensed. Copyright © 2025-2026 Ettore Ciambra Senatore.
