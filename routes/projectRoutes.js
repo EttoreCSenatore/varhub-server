@@ -1,11 +1,16 @@
-const express = require('express');  
-const { getProjects, getProjectById } = require('../controllers/projectController');  
+const express = require('express');
+const { listProjects, getProject, createProject, updateProject, listAllProjects } = require('../controllers/projectController');
+const { projectFeedback } = require('../controllers/feedbackController');
+const { requireAdmin } = require('../middleware/auth');
 
-const { optionalAuth } = require('../middleware/auth');
+const router = express.Router();
 
-const router = express.Router();  
+router.get('/projects', listProjects);
+router.get('/projects/:id', getProject);
+router.get('/projects/:id/feedback', projectFeedback);
 
-router.get('/projects', getProjects);  
-router.get('/projects/:id', optionalAuth, getProjectById);
+router.get('/admin/projects', requireAdmin, listAllProjects);
+router.post('/projects', requireAdmin, createProject);
+router.put('/projects/:id', requireAdmin, updateProject);
 
 module.exports = router;

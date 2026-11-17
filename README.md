@@ -11,8 +11,8 @@ API do **VARHub**, a plataforma de marketing com realidade aumentada do **VARLab
 ```bash
 npm install
 cp .env.example .env   # preencha JWT_SECRET e os dados do banco
-psql "postgresql://USUARIO:SENHA@HOST/BANCO?sslmode=require" -f db/schema.sql
-npm start
+npm run db:migrate   # cria as tabelas (npm run db:seed para dados de demonstração)
+npm run dev
 ```
 
 Rotas protegidas exigem `Authorization: Bearer <token>`. Lista completa em [API](https://ettorecsenatore.github.io/varhub-client/docs/tecnico/api). Vulnerabilidades: [SECURITY.md](SECURITY.md).

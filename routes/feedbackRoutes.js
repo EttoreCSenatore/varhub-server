@@ -1,10 +1,10 @@
-const express = require('express');  
-const { submitFeedback } = require('../controllers/feedbackController');  
+const express = require('express');
+const { submitFeedback } = require('../controllers/feedbackController');
+const { optionalAuth } = require('../middleware/auth');
+const { feedbackLimiter } = require('../middleware/limits');
 
-const { requireAuth } = require('../middleware/auth');
+const router = express.Router();
 
-const router = express.Router();  
-
-router.post('/feedback', requireAuth, submitFeedback);  
+router.post('/feedback', feedbackLimiter, optionalAuth, submitFeedback);
 
 module.exports = router;
