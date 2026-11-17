@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "2.0.0",
-  "description": "VARHub API: auth, projects, feedback, analytics and push notifications",
+  "description": "VARHub API: open-source backend for publishing VR/AR projects (projects, feedback, analytics, admin)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

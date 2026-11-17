@@ -2,7 +2,7 @@
 
 **English** · [Português](README.md)
 
-API for **VARHub**, **VARLab**'s augmented-reality marketing platform (my capstone project at Conestoga College). Express + PostgreSQL (Neon): JWT accounts, projects, feedback, analytics and push notifications (Firebase).
+API for **VARHub**, a free concept for **publishing VR and AR projects for companies and schools**, adaptable by any business or institution. Express + PostgreSQL: projects, anonymous feedback, usage events, accounts with roles (visitor and admin), a metrics dashboard and push notifications. It started as my capstone project at Conestoga College, with VARLab as the original use case.
 
 📖 Documentation (architecture, API, security): https://ettorecsenatore.github.io/varhub-client/en/ · Client: [varhub-client](https://github.com/EttoreCSenatore/varhub-client)
 
@@ -19,4 +19,4 @@ Protected routes require `Authorization: Bearer <token>`. Full list in [API](htt
 
 ## License
 
-[MIT](LICENSE.txt)
+[MIT](LICENSE.txt): free software; use, modify and distribute it, including commercially. The names and logos of VARLab and Conestoga College are not licensed.
