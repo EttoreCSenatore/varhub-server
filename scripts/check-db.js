@@ -1,4 +1,4 @@
-const pool = require('./db');
+const pool = require('../db');
 
 console.log('Trying to connect to database...');
 

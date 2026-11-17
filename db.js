@@ -8,7 +8,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   ssl: {
-    rejectUnauthorized: false // Required for Neon PostgreSQL connection
+    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false' // verify the Neon certificate by default
   },
   // Optimized settings for serverless environment
   max: 10, // Maximum number of clients
@@ -32,5 +32,6 @@ const connect = async () => {
 module.exports = {
   pool,
   connect,
-  query: (text, params) => pool.query(text, params)
+  query: (text, params) => pool.query(text, params),
+  end: () => pool.end()
 };
