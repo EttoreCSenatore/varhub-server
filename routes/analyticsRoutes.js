@@ -1,10 +1,12 @@
-const express = require('express');  
-const { getEngagementLogs } = require('../controllers/analyticsController');  
+const express = require('express');
+const { recordEvent, summary, getEngagementLogs } = require('../controllers/analyticsController');
+const { optionalAuth, requireAdmin } = require('../middleware/auth');
+const { eventLimiter } = require('../middleware/limits');
 
-const { requireAuth } = require('../middleware/auth');
+const router = express.Router();
 
-const router = express.Router();  
+router.post('/events', eventLimiter, optionalAuth, recordEvent);
+router.get('/analytics/summary', requireAdmin, summary);
+router.get('/analytics', requireAdmin, getEngagementLogs);
 
-router.get('/analytics', requireAuth, getEngagementLogs);  
-
-module.exports = router;  
+module.exports = router;

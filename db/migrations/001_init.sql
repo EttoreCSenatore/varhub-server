@@ -1,5 +1,4 @@
--- VARHub schema (PostgreSQL). Derived from the original check-*-table.js scripts.
--- Apply with: psql "$DATABASE_URL" -f db/schema.sql
+-- 001: initial schema (derived from the original check-*-table.js scripts). Idempotent.
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255),

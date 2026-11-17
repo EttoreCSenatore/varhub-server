@@ -1,13 +1,15 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "VARHub API: auth, projects, feedback, analytics and push notifications",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "db:init": "psql \"$DATABASE_URL\" -f db/schema.sql",
-    "db:check": "node scripts/check-db.js"
+    "dev": "node --watch server.js",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/migrate.js --seed",
+    "admin:promote": "node scripts/make-admin.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,6 @@
     "pg": "^8.14.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
