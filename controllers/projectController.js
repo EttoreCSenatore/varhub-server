@@ -24,7 +24,7 @@ const getProjectById = async (req, res) => {
     // Log project view
     await pool.query(
       'INSERT INTO engagement_logs (user_id, action_type, project_id) VALUES ($1, $2, $3)',
-      [1, 'project_view', id] // Replace 1 with actual user ID later
+      [req.user ? req.user.userId : null, 'project_view', id]
     );
 
     const project = await pool.query(

@@ -1,9 +1,11 @@
 const express = require('express');  
 const { sendNotification } = require('../controllers/notificationController');  
 
+const { requireAuth } = require('../middleware/auth');
+
 const router = express.Router();  
 
-router.post('/send-notification', sendNotification);  
+router.post('/send-notification', requireAuth, sendNotification);  
 
 // Add a simple GET endpoint for testing
 router.get('/test-notification', (req, res) => {
