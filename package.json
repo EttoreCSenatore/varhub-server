@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --test --test-concurrency=1 test/",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
     "db:migrate": "node scripts/migrate.js",
     "db:seed": "node scripts/migrate.js --seed",
     "admin:promote": "node scripts/make-admin.js"
