@@ -1,4 +1,4 @@
-const pool = require('./db');
+const pool = require('../db');
 
 console.log('Checking ar_content table...');
 

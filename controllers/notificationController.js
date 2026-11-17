@@ -2,7 +2,10 @@ const admin = require('../firebaseAdmin');
 
 const sendNotification = async (req, res) => {  
   try {  
-    const { token, title, body } = req.body;  
+    const { token, title, body } = req.body;
+    if (!token || !title || !body) {
+      return res.status(400).json({ message: 'token, title and body are required' });
+    }  
     const message = {  
       notification: { title, body },  
       token,  

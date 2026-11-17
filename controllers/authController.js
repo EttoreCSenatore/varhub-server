@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');  
-const jwt = require('jsonwebtoken');  
+const bcrypt = require('bcryptjs');  
+const { signToken } = require('../middleware/auth');  
 const pool = require('../db');  
 require('dotenv').config();  
 
@@ -26,10 +26,10 @@ const signup = async (req, res) => {
     }
 
     // Validate password strength
-    if (password.length < 6) {
+    if (password.length < 8) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters long'
+        message: 'Password must be at least 8 characters long'
       });
     }
 
@@ -52,11 +52,7 @@ const signup = async (req, res) => {
     );
 
     // Generate JWT token
-    const token = jwt.sign(
-      { userId: result.rows[0].id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    const token = await signToken(result.rows[0].id);
 
     res.status(201).json({ 
       success: true,
@@ -110,11 +106,7 @@ const login = async (req, res) => {
     }  
 
     // Generate JWT token  
-    const token = jwt.sign(  
-      { userId: user.rows[0].id },  
-      process.env.JWT_SECRET,  
-      { expiresIn: '24h' }  
-    );  
+    const token = await signToken(user.rows[0].id);  
 
     res.status(200).json({ 
       success: true,
