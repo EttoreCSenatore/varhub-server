@@ -19,4 +19,4 @@ Rotas protegidas exigem `Authorization: Bearer <token>`. Lista completa em [API]
 
 ## Licença
 
-[MIT](LICENSE.txt): software livre; use, modifique e distribua, inclusive comercialmente. Nomes e logotipos do VARLab e do Conestoga College não são licenciados.
+[GNU AGPL-3.0-or-later](LICENSE) (software livre): use, modifique e distribua, inclusive comercialmente; se hospedar uma versão modificada, ofereça o código-fonte aos usuários. Nomes e logotipos do VARLab e do Conestoga College não são licenciados. Copyright © 2025-2026 Ettore Ciambra Senatore.
