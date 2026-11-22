@@ -160,3 +160,30 @@ test('malformed JSON gets a 400, unknown routes a 404', async () => {
   assert.equal(res.status, 400);
   assert.equal((await call('GET', '/nope')).status, 404);
 });
+
+test('GET /api/version reports the package version', async () => {
+  const { status, body } = await call('GET', '/api/version');
+  assert.equal(status, 200);
+  assert.equal(body.version, require('../package.json').version);
+});
+
+test('demo reset refuses to run without DEMO_MODE and, in demo mode, rebuilds a believable demo', async () => {
+  const { demoReset } = require('../scripts/demo-reset');
+  const options = { adminEmail: 'demo@varhub.example', adminPassword: 'demo-password-123' };
+  delete process.env.DEMO_MODE;
+  await register('keep@b.co');
+  await assert.rejects(() => demoReset(options), /DEMO_MODE=1/);
+  assert.equal((await db.query('SELECT COUNT(*)::int AS n FROM users')).rows[0].n, 1); // nothing was deleted
+
+  process.env.DEMO_MODE = '1';
+  try {
+    await demoReset(options);
+  } finally {
+    delete process.env.DEMO_MODE;
+  }
+  assert.equal((await db.query("SELECT COUNT(*)::int AS n FROM users WHERE email = 'keep@b.co'")).rows[0].n, 0);
+  assert.equal((await db.query("SELECT role FROM users WHERE email = 'demo@varhub.example'")).rows[0].role, 'admin');
+  assert.ok((await db.query('SELECT COUNT(*)::int AS n FROM engagement_logs')).rows[0].n > 100);
+  const login = await call('POST', '/api/auth/login', { body: { email: 'demo@varhub.example', password: 'demo-password-123' } });
+  assert.equal(login.status, 200);
+});

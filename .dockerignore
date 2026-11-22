@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+.env
+.env.*
+!.env.example
+test
+*.md
+Dockerfile
+.dockerignore
+serviceAccountKey.json

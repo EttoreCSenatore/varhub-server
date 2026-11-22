@@ -15,6 +15,8 @@ npm run db:migrate   # cria as tabelas (npm run db:seed para dados de demonstra�
 npm run dev
 ```
 
+Imagem Docker (aplica as migrações ao iniciar): `ghcr.io/ettorecsenatore/varhub-server`. Veja a instalação completa na [documentação](https://ettorecsenatore.github.io/varhub-client/docs/tecnico/desenvolvimento).
+
 Rotas protegidas exigem `Authorization: Bearer <token>`. Lista completa em [API](https://ettorecsenatore.github.io/varhub-client/docs/tecnico/api). Vulnerabilidades: [SECURITY.md](SECURITY.md).
 
 ## Licença

@@ -8,6 +8,8 @@ on:
 permissions:
   contents: read
 
+# Third-party actions are pinned to a commit (the tag in the comment): a moved tag cannot change
+# what runs with this repository's credentials. Update both together (Dependabot does).
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,10 +29,10 @@ jobs:
       DB_PASSWORD: postgres
       DB_SSL: 'false'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -39,3 +41,48 @@ jobs:
       - name: Dependency licenses (AGPL-3.0 compatible)
         run: python3 scripts/auditar-licencas.py --npm .
       - run: npm test
+
+  image:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build the image
+        run: docker build -t varhub-server:ci .
+      - name: The container starts as a non-root user and answers /api/version
+        run: |
+          test "$(docker run --rm --entrypoint id varhub-server:ci -u)" != "0"
+          docker run -d --name api -p 5000:5000 -e JWT_SECRET=ci-only-ci-only-ci-only --entrypoint node varhub-server:ci server.js
+          for i in $(seq 1 20); do curl -fs localhost:5000/api/version && break; sleep 1; done
+          curl -fs localhost:5000/api/version | grep -q '"version"'
+
+  # Publishes the image to GitHub Packages (ghcr.io). The web repository's Compose file pulls it.
+  publish:
+    needs: [test, image]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write  # ghcr.io/ettorecsenatore/varhub-server
+    env:
+      IMAGE: ghcr.io/ettorecsenatore/varhub-server
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Log in to GitHub Packages
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u "${{ github.actor }}" --password-stdin ghcr.io
+      - name: Build and publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAGS=(-t "$IMAGE:latest" -t "$IMAGE:${GITHUB_SHA::12}")
+          # The version tag points to the first image of that version and is never moved.
+          if ! docker manifest inspect "$IMAGE:$VERSION" >/dev/null 2>&1; then
+            TAGS+=(-t "$IMAGE:$VERSION")
+          fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.opencontainers.image.licenses=AGPL-3.0-or-later" "${TAGS[@]}" .
+          docker push --all-tags "$IMAGE"
