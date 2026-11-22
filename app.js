@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const db = require('./db');
 const { authLimiter } = require('./middleware/limits');
+const { version } = require('./package.json');
 
 const app = express();
 app.set('trust proxy', 1); // behind Railway's proxy
@@ -23,16 +24,20 @@ app.use(express.json({ limit: '100kb' }));
 app.get('/', (req, res) => {
   res.json({
     service: 'VARHub API',
-    version: '2.0.0',
+    version,
     endpoints: ['/api/auth', '/api/projects', '/api/feedback', '/api/events', '/api/analytics', '/api/notifications'],
     health: '/health',
   });
 });
 
+// Public and cheap: for uptime monitors and for the web footer.
+app.get('/api/version', (req, res) => res.json({ version }));
+
 app.get('/health', async (req, res) => {
   const database = await db.connect().then(() => 'connected').catch(() => 'disconnected');
   res.status(database === 'connected' ? 200 : 503).json({
     status: database === 'connected' ? 'healthy' : 'degraded',
+    version,
     uptime: Math.floor(process.uptime()),
     database,
   });

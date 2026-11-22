@@ -9,7 +9,8 @@
     "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
     "db:migrate": "node scripts/migrate.js",
     "db:seed": "node scripts/migrate.js --seed",
-    "admin:promote": "node scripts/make-admin.js"
+    "admin:promote": "node scripts/make-admin.js",
+    "demo:reset": "node scripts/demo-reset.js"
   },
   "keywords": [],
   "author": "",
