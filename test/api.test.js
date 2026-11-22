@@ -187,3 +187,10 @@ test('demo reset refuses to run without DEMO_MODE and, in demo mode, rebuilds a 
   const login = await call('POST', '/api/auth/login', { body: { email: 'demo@varhub.example', password: 'demo-password-123' } });
   assert.equal(login.status, 200);
 });
+
+test('releases.yaml is valid and its top entry matches package.json', () => {
+  const { loadReleases, validate } = require('../scripts/release-notes');
+  const releases = loadReleases();
+  assert.deepEqual(validate(releases), []);
+  assert.equal(String(releases[0].version), require('../package.json').version);
+});
