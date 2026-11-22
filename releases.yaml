@@ -1,0 +1,59 @@
+# Release history: the single source for version notes. The top entry must match package.json.
+# CI creates the tag and the GitHub Release from it (scripts/release-notes.js).
+# kind: new | improvement | fix | security
+- version: 2.1.0
+  date: 2026-11-22
+  title:
+    en: Docker image, version endpoint and demo reset
+    pt-br: Imagem Docker, endpoint de versão e reset da demonstração
+  items:
+    - kind: new
+      text:
+        en: A Docker image is published to ghcr.io; it applies database migrations when it starts and runs as a non-root user.
+        pt-br: Uma imagem Docker é publicada no ghcr.io; ela aplica as migrações do banco ao iniciar e roda sem privilégios de root.
+    - kind: new
+      text:
+        en: GET /api/version reports the installed version, and /health includes it.
+        pt-br: GET /api/version informa a versão instalada, e /health também a inclui.
+    - kind: new
+      text:
+        en: "npm run demo:reset rebuilds a public demo (sample projects, simulated activity, demo admin). It refuses to run unless DEMO_MODE=1."
+        pt-br: "npm run demo:reset recria uma demonstração pública (projetos de exemplo, atividade simulada, administrador de demonstração). Recusa rodar sem DEMO_MODE=1."
+    - kind: improvement
+      text:
+        en: CI pins third-party actions by commit, builds and smoke-tests the image, and checks dependency licenses.
+        pt-br: O CI fixa as actions de terceiros por commit, constrói e testa a imagem e confere as licenças das dependências.
+    - kind: improvement
+      text:
+        en: Dependabot keeps npm packages, GitHub Actions and Docker images up to date.
+        pt-br: O Dependabot mantém pacotes npm, GitHub Actions e imagens Docker atualizados.
+- version: 2.0.0
+  date: 2026-11-17
+  title:
+    en: API v2
+    pt-br: API v2
+  items:
+    - kind: new
+      text:
+        en: Visitor and admin roles; admin routes check the role in the database.
+        pt-br: Papéis de visitante e administrador; as rotas de administração conferem o papel no banco.
+    - kind: new
+      text:
+        en: Anonymous, rate-limited feedback with a public summary that never shows the author.
+        pt-br: Feedback anônimo e com limite de requisições, com um resumo público que nunca mostra o autor.
+    - kind: new
+      text:
+        en: Usage events, an admin analytics summary and project management endpoints.
+        pt-br: Eventos de uso, um resumo de métricas para administradores e endpoints de gestão de projetos.
+    - kind: new
+      text:
+        en: SQL migrations and a seed script replace the old table-check scripts.
+        pt-br: Migrações SQL e um script de dados iniciais substituem os antigos scripts de checagem de tabelas.
+    - kind: security
+      text:
+        en: Replaced jsonwebtoken and native bcrypt with jose and bcryptjs, added Helmet, rate limits, input validation and a TLS-verified database connection.
+        pt-br: jsonwebtoken e bcrypt nativo foram trocados por jose e bcryptjs; foram adicionados Helmet, limites de requisições, validação de entrada e conexão com o banco com TLS verificado.
+    - kind: fix
+      text:
+        en: Feedback was written to a column that does not exist; the author now comes from the token, not the request body.
+        pt-br: O feedback era gravado em uma coluna que não existe; o autor agora vem do token, não do corpo da requisição.

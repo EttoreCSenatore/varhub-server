@@ -1,6 +1,6 @@
 #!/bin/sh
 # Applies pending database migrations, then starts the API. A failed migration stops the container
-# (the old version keeps running behind the proxy until the new one is healthy).
+# (it does not start), so the new version never runs against a half-migrated schema.
 set -e
 node scripts/migrate.js
 exec "$@"
